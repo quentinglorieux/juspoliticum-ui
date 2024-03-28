@@ -12,7 +12,7 @@ export default defineConfig({
     port: 4321,
     host: true
   },
-  output: "hybrid",
+  output: "server",
   adapter: vercel(),
   vite: {
     ssr: {
