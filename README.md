@@ -5,6 +5,8 @@
 npm install
 npx astro add vercel
 vercel env add PUBLIC_DIRECTUS_URL
+think about Node 18
+verify astro in Vercel
 
 ```sh
 npm create astro@latest -- --template basics
