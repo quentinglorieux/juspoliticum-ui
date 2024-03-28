@@ -1,0 +1,80 @@
+.chapter_title {
+  @apply text-xl p-1 my-2 text-secondary-alt font-bold dark:text-secondary-dark;
+}
+
+.line {
+  @apply grow ml-3 text-accent bg-black rounded-full my-8;
+}
+
+.page_title {
+  @apply text-3xl dark:text-secondary-dark text-secondary-alt my-4;
+}
+
+.sidebar {
+  @apply hidden lg:block w-2/6 border-accent-light;
+}
+
+.sidebar_list {
+  @apply list-none p-4 border border-accent dark:border-accent-light;
+}
+
+.volume_title {
+  @apply text-accent-dark text-start;
+}
+
+.sidebar_title {
+  @apply text-2xl p-4 text-center w-full flex justify-center dark:bg-accent-light dark:text-accent-dark bg-accent text-color-light;
+}
+
+.sidebar_title a {
+  @apply text-inherit;
+}
+.sidebar_list .sidebar_item a {
+  @apply text-base;
+}
+
+.sidebar_item {
+  @apply my-2;
+}
+
+.article_title {
+  @apply text-xl my-1 italic;
+}
+
+.article_author {
+  @apply text-lg font-semibold my-1;
+}
+
+.num {
+  @apply w-12 py-1  before:content-['N°'] bg-accent-light text-accent-dark dark:bg-accent-dark dark:text-accent-light text-center;
+  min-width: 50px;
+}
+
+.date {
+  @apply text-accent-light ml-1;
+}
+
+table {
+  @apply w-full;
+}
+
+table td {
+  @apply border border-gray-300;
+}
+
+table th {
+  @apply border border-gray-300;
+}
+
+table tr {
+  @apply border border-gray-300;
+}
+
+table td,
+table th {
+  @apply p-2;
+}
+
+.btn, button {
+  @apply font-light text-accent-dark hover:text-color-light border border-accent-dark hover:bg-accent focus:ring-2 focus:outline-none focus:ring-accent rounded px-7 py-1.5 text-center dark:border-color-light dark:text-color-light dark:hover:text-color dark:hover:bg-accent dark:focus:ring-accent-dark opacity-100 ;
+}

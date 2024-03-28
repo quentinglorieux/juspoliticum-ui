@@ -1,0 +1,200 @@
+---
+import FontSize from "./FontSize.astro";
+import Footnotes from "./Footnotes.astro";
+import TableOfContent from "./TableOfContent.astro";
+import Chapters from "./Chapters.astro";
+import Download from "./Download.astro";
+import Abstract from "./Abstract.astro";
+import VolumeTitle from "./VolumeTitle.astro";
+import Citation from "./Citation.astro";
+import { getImagePath } from "../utils/get-directus-client";
+
+const { article } = Astro.props;
+---
+
+<article class="article">
+  <div class="main-content relative flex lg:flex-row flex-col-reverse">
+    <!-- <div id="sidebar" class="w-1/4 sidebar-1 flex flex-col"> -->
+    <!-- <div class="sidebar__inner sidebar__inner-1">-->
+    <!-- <Chapters article={article} />-->
+    <!--</div> -->
+    <!--</div> -->
+    <div class="lg:w-3/4 leading-normal flex flex-col">
+      <div class="article_topWrapper">
+        <div class="mb-4 border-b lg:h-14 mt-2 lg:mt-0">
+          <VolumeTitle volume={article.volume} />
+        </div>
+        <h1 class="my-2 page_title !text-2xl font-semibold">{article.title}</h1>
+        <div class="author_list">
+          {
+            article.authors.map(({ author_id: author }) => (
+              <div class="article_author">
+                <a href={`/auteurs/${author.slug}`}>{author.fullname}</a>
+              </div>
+            ))
+          }
+        </div>
+        {
+          article.themes?.length > 0 && (
+            <div class="text-lg my-2 flex flex-wrap">
+              <span class="mr-2">Thèmes : </span>
+              {article.themes.map(({ theme_id: theme }) => (
+                <div class="article_theme">
+                  <a href={`/themes/${theme.slug}`}>{theme.name}</a>
+                </div>
+              ))}
+            </div>
+          )
+        }
+      </div>
+      <Abstract abstracts={article.abstracts} />
+      <div class="article_content" set:html={article.content} />
+      <div class="audio_files">
+        {
+          article.files
+            .filter(({ directus_file_id: file }) => file.type === "audio/mpeg")
+            .map(({ directus_file_id: file }) => (
+              <div class="w-full flex flex-col items-center">
+                <span class="text-xl text-center">{file.title}</span>
+                <audio controls>
+                  <source src={getImagePath(file.id)} type="audio/mpeg" />
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            ))
+        }
+      </div>
+      <Citation article={article} />
+    </div>
+    <div id="sidebar-2" class="w-full lg:w-1/3 mx-0 lg:mx-4 sidebar-2 flex flex-col">
+      <div class="sidebar__inner sidebar__inner-2">
+        <FontSize />
+        <Download article={article} />
+        <TableOfContent />
+        <Footnotes />
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="/js/sticky-sidebar.js"></script>
+  <script>
+    new StickySidebar(`.sidebar-2`, {
+      containerSelector: ".main-content",
+      innerWrapperSelector: ".sidebar__inner-2",
+      topSpacing: 20,
+      bottomSpacing: 20,
+      stickyClass: "is-affixed",
+    });
+    new StickySidebar(`.sidebar-1`, {
+      containerSelector: ".main-content",
+      innerWrapperSelector: ".sidebar__inner-1",
+      topSpacing: 20,
+      bottomSpacing: 20,
+    });
+  </script>
+
+  <script type="text/javascript" src="/js/add-lettrine.js"></script>
+
+  <style is:global>
+    .article_content {
+      @apply text-lg text-justify w-full;
+      counter-reset: footnote;
+    }
+
+    .lettrine {
+      /* @apply float-left font-bold text-5xl mr-2; */
+      position: relative;
+      float: left;
+      font-size: 55px;
+      line-height: 1;
+      font-weight: bold;
+      margin-right: 9px;
+    }
+
+    @media (max-width: 1024px) {
+      .is-affixed .sidebar__inner-2 {
+        background-color: rgba(var(--background));
+        color: rgba(var(--accent));
+      }
+    }
+
+    .sidebar {
+      @apply w-full lg:w-1/4 border-none;
+
+      will-change: min-height;
+    }
+
+    .sidebar__inner {
+      transform: translate(0, 0); /* For browsers don't support translate3d. */
+      transform: translate3d(0, 0, 0);
+      will-change: position, transform;
+    }
+
+    blockquote {
+      @apply italic pl-6 my-4;
+    }
+
+    a.footnote-link:not(.no-count)::after {
+      counter-increment: footnote;
+      content: "[" counter(footnote) "]";
+    }
+    a.footnote-link,
+    .no-count::after {
+      content: "[*]";
+    }
+
+    .article_content .footnote-link::after {
+      font-size: 1.3rem; /* Maintain relative font-size in browsers that support it */
+      letter-spacing: normal;
+      display: inline-block;
+      vertical-align: super;
+      @apply text-secondary-alt dark:text-secondary-alt-light;
+    }
+
+    .article_author {
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin: 0;
+      padding: 0;
+    }
+    .article_author::after {
+      content: ",";
+      @apply text-accent-light mr-2;
+    }
+    .article_author:last-child::after {
+      content: "";
+    }
+
+    .author_list {
+      @apply flex flex-row;
+    }
+    .article_theme a {
+      @apply dark:text-secondary-alt-light text-secondary-alt text-lg;
+    }
+    .article_theme::after {
+      @apply dark:text-secondary-alt-light text-secondary-alt text-base;
+      content: "•";
+      margin: 0 0.5rem;
+    }
+    .article_theme:last-child::after {
+      content: "";
+      margin: 0;
+    }
+
+    h3 {
+      @apply text-2xl font-bold mt-6 mb-2;
+    }
+    h4 {
+      @apply text-xl font-semibold mt-4 mb-2;
+    }
+    .article_content p {
+      @apply my-4;
+    }
+    .audio_files {
+      @apply my-4 flex flex-col items-center;
+    }
+    .audio_files audio {
+      @apply my-2;
+    }
+  </style>
+</article>

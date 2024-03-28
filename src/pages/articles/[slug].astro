@@ -1,0 +1,49 @@
+---
+export const prerender = false;
+import { Debug } from "astro:components";
+
+import Layout from "../../layouts/Layout.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import Article from "../../components/Article.astro";
+
+import { getDirectusClient } from "../../utils/get-directus-client";
+import { readItems, readItem } from "@directus/sdk";
+import { getArticleBySlug } from "../../utils/requests";
+
+const { slug } = Astro.params;
+
+const directus = await getDirectusClient();
+
+let article = await getArticleBySlug(slug);
+
+let sections = [];
+let volume = null;
+if (article.section_id) {
+  sections = await directus.request(
+    readItems("VolumeSections", {
+      fields: ["title", "slug", "id", { articles: ["slug", "title"] }],
+      filter: {
+        volume_id: {
+          _eq: article.section_id.volume_id,
+        },
+      },
+    }),
+  );
+  volume = await directus.request(
+    readItem("Volumes", article.section_id.volume_id),
+  );
+}
+
+article = {
+  ...article,
+  contents: article.article_contents,
+  sections,
+  volume,
+};
+---
+
+<Layout title="Juspoliticum">
+  <PageLayout title={"none"} className="max-w-screen-2xl lg:px-24 px-2">
+    <Article article={article} />
+  </PageLayout>
+</Layout>

@@ -1,0 +1,32 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import ArticleTitle from "../../components/ArticleTitle.astro";
+
+import { getThemesWithArticles } from "../../utils/requests";
+
+export async function getStaticPaths() {
+  const themes = await getThemesWithArticles();
+  return themes.map((theme) => ({
+    params: { slug: theme.slug },
+    props: { theme },
+  }));
+}
+
+const { theme } = Astro.props;
+---
+
+<Layout title="Juspoliticum">
+  <PageLayout title={`Les articles du thème : ${theme.name}`} className="max-w-screen-2xl lg:px-24 px-10">
+    <ul>
+      {
+        theme.articles.map((article) => (
+          <li>
+            <ArticleTitle article={article.article_id} />
+          </li>
+        ))
+      }
+    </ul>
+    <script src="/js/dynamic-article-list.js" type:"text javascript"></script>
+  </PageLayout>
+</Layout>

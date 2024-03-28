@@ -1,0 +1,21 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import AlphabetList from "../../components/AlphabetList.astro";
+import { getAuthors } from "../../utils/requests";
+
+let authors = await getAuthors();
+
+authors = authors.map((author) => {
+  return {
+  link: `/auteurs/${author.slug}`,
+  content: `${author.lastname} ${author.firstname}`,
+  };
+});
+---
+
+<Layout title="Auteurs">
+  <PageLayout title="Auteurs" className="max-w-screen-2xl lg:px-24 px-10" >
+    <AlphabetList items={authors} />
+  </PageLayout>
+</Layout>

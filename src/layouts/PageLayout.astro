@@ -1,0 +1,20 @@
+---
+interface Props {
+  title: string;
+  className?: string;
+}
+
+const { title, className } = Astro.props;
+---
+
+<div class={`xl:px-auto  text-justify  max-w-screen-xl mx-auto ${className}`}>
+  <div
+    class={`flex flex-row items-center  ${
+      title === "none" ? "hidden" : "block"
+    }`}
+  >
+    <h1 class="page_title">{title}</h1>
+    <hr class="line" />
+  </div>
+  <slot />
+</div>

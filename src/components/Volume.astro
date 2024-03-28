@@ -1,0 +1,44 @@
+---
+import ArticleTitle from "./ArticleTitle.astro";
+import VolumeTitle from "./VolumeTitle.astro";
+const { volume } = Astro.props;
+---
+
+<article class="flex flex-col ">
+  <VolumeTitle volume={volume} />
+  <div class="main-content relative flex flex-row mr-6">
+    <div class="volume_content">
+      {
+        volume.sections
+          ?.sort((a, b) => a.position - b.position)
+          .map((section) => (
+            <>
+              <h2 class="chapter_title" id={section.id}>
+                {section.title}
+              </h2>
+              <ul>
+                {section?.articles.map((article) => (
+                  <li class="">
+                    <ArticleTitle article={article} />
+                  </li>
+                ))}
+              </ul>
+            </>
+          ))
+      }
+    </div>
+  </div>
+</article>
+<script src="/js/dynamic-article-list.js" type="text/javascript"></script>
+
+<style>
+  .volume_content {
+    @apply  text-lg text-left w-full max-w-5xl mb-20  leading-normal mt-4;
+  }
+  h4 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+  }
+</style>

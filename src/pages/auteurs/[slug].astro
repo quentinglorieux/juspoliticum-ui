@@ -1,0 +1,32 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import ArticleTitle from "../../components/ArticleTitle.astro";
+
+import { getAuthorsWithArticles } from "../../utils/requests";
+
+export async function getStaticPaths() {
+  const authors = await getAuthorsWithArticles();
+  return authors.map((author) => ({
+    params: { slug: author.slug },
+    props: { author },
+  }));
+}
+
+const { author } = Astro.props;
+---
+
+<Layout title="Juspoliticum">
+  <PageLayout title={`Les articles de l'auteur : ${author.fullname}`} className="max-w-screen-2xl lg:px-24 px-10">
+    <ul>
+      {
+        author.articles.map((article) => (
+          <li>
+            <ArticleTitle article={article.article_id} />
+          </li>
+        ))
+      }
+    </ul>
+    <script src="/js/dynamic-article-list.js" type:"text javascript"></script>
+  </PageLayout>
+</Layout>
